@@ -3,7 +3,7 @@ import type { OrderItemDTO } from "./order-item";
 
 export interface OrderDTO {
     id?: string;
-    customer: CustomerDTO | string;
+    custommer: CustomerDTO | string;
     status: string;
     total: number;
     shipping: number;

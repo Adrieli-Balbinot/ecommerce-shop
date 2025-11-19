@@ -18,9 +18,15 @@ export function useOrder(id: string) {
     });
 }
 
+// export function useCreateOrder() {
+//     return useMutation<OrderDTO, Error, Omit<OrderDTO, 'id'>>({
+//         mutationFn: (order: Omit<OrderDTO, 'id'>) => OrderService.create(order)
+//     });
+// }
+
 export function useCreateOrder() {
     return useMutation<OrderDTO, Error, Omit<OrderDTO, 'id'>>({
-        mutationFn: (order: Omit<OrderDTO, 'id'>) => OrderService.create(order)
+        mutationFn: (order) => OrderService.create(order)
     });
 }
 

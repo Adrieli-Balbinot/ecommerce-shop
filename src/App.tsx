@@ -1,34 +1,3 @@
-// import { Navigate, Route, Routes } from "react-router-dom";
-// import { ToastContainer } from "react-toastify";
-
-// import ProductLayout from "./cases/products/components/product-layout";
-// import "react-toastify/dist/ReactToastify.css";
-// import { Header } from "./components/layout/header";
-// import { CartProvider } from "./cases/cart/context/cart-provider";
-
-// function App() {
-//     return (
-//         <CartProvider>
-//             <div className="wrapper flex flex-col min-h-screen">
-
-//                 <Header />
-
-//                 <main className="flex-1">
-//                     <Routes>
-//                         <Route path="/" element={<Navigate to="/products" replace />} />
-//                         <Route path="/products" element={<ProductLayout />} />
-//                     </Routes>
-//                 </main>
-
-//                 <ToastContainer />
-//             </div>
-//         </CartProvider>
-//     );
-// }
-
-// export default App;
-
-
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import Login from "./cases/auth/components/login";

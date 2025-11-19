@@ -39,3 +39,12 @@ export function useUpdateCustomer() {
         }
     })
 }
+
+
+export function useCustomerByAuthId(authId: string) {
+    return useQuery({
+        queryKey: ["customerByAuthId", authId],
+        queryFn: () => CustomerService.getByAuthId(authId),
+        enabled: !!authId, // só executa se tiver authId
+    });
+}

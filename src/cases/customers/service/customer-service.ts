@@ -23,5 +23,10 @@ export const CustomerService = {
     async update(id: string, customer: CustomerDTO): Promise<CustomerDTO> {
         const result = await api.put(`${_ENDPOINT}/${id}`, customer);
         return result.data;
+    },
+
+    getByAuthId: async (authId: string): Promise<CustomerDTO> => {
+        const { data } = await api.get(`${_ENDPOINT}/by-auth/${authId}`);
+        return data;
     }
 };

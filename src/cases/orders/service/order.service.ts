@@ -9,14 +9,15 @@ export const OrderService = {
         const result = await api.get(_ENDPOINT);
         return result.data;
     },
-    
+
     async getById(id: string): Promise<OrderDTO> {
         const result = await api.get(`${_ENDPOINT}/${id}`);
         return result.data;
     },
 
-    async createcreate(order: OrderDTO): Promise<OrderDTO> {
-        const result = await api.post(_ENDPOINT, order);
-        return result.data;
-    },
+    async create(order: Omit<OrderDTO, 'id'>): Promise<OrderDTO> {
+        const response = await api.post("/orders", order);
+        return response.data as OrderDTO;
+    }
+
 };

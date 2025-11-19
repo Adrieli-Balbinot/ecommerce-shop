@@ -9,16 +9,16 @@ export function OrderDataTable() {
 
     const user = JSON.parse(localStorage.getItem("user") || "{}");
     const userId = user?.id;
-    const customer = customers?.find((customer) => customer.userId === userId);
+    const customer = customers?.find((customer) => customer.id === userId);
 
     const filteredOrders =  orders?.filter(order => {
         if (!customer) return false;
 
-        if (typeof order.customer === "string") {
-            return order.customer === customer.id;
+        if (typeof order.custommer === "string") {
+            return order.custommer === customer.id;
         }
 
-        return order.customer?.id === customer.id;
+        return order.custommer?.id === customer.id;
     }) ?? [];
 
     return (

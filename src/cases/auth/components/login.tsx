@@ -37,6 +37,8 @@ export function Login() {
                 toast.error('Credenciais inválidas. Verifique seu e-mail e senha.');
                 return;
             }
+            
+            console.log('Login successful:', data.user);
 
             localStorage.setItem('user', JSON.stringify({id: data.user?.id, token: data.session?.access_token}) || '');
             toast.success('Login realizado com sucesso!');

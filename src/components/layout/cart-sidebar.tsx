@@ -3,9 +3,42 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { ShoppingCart, Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCartContext } from "@/cases/cart/hooks/use-cart.context";
+import { useCreateOrder } from "@/cases/orders/hooks/use-orders";
+import type { OrderDTO } from "@/cases/orders/dto/order.dto";
+import { useCustomerByAuthId } from "@/cases/customers/hooks/use-customer";
+import { toast } from "react-toastify";
 
 export function CartSidebar() {
     const { cart, removeFromCart } = useCartContext();
+    const createOrder = useCreateOrder();
+    const userStorage = localStorage.getItem("user");
+    const user = userStorage ? JSON.parse(userStorage) : null;
+    const { data: customer } = useCustomerByAuthId(user?.id);
+
+    console.log("Customer in CartSidebar:", customer);
+
+    const handleCheckout = () => {
+        if (!customer) {
+            alert("Não foi possível identificar o cliente.");
+            return;
+        }
+
+        const payload: Omit<OrderDTO, "id"> = {
+            custommer: customer.id as string,
+            status: "NEW",
+            total: cart.reduce((sum, item) => sum + item.price * item.quantity, 0),
+            shipping: 10.0,
+            items: cart.map(item => ({
+                product: item.id as string,
+                quantity: item.quantity,
+                value: item.price,
+            }))
+        };
+
+        createOrder.mutate(payload, {
+            onSuccess: () => toast.success('Pedido realizado com sucesso!')
+        });
+    };
 
     return (
         <Sheet>
@@ -62,8 +95,10 @@ export function CartSidebar() {
                     <div className="p-4 border-t">
                         <Button
                             className="w-full bg-green-600 hover:bg-green-700 text-white"
+                            onClick={handleCheckout}
+                            disabled={createOrder.isPending}
                         >
-                            Finalizar Compra
+                            {createOrder.isPending ? "Finalizando..." : "Finalizar Compra"}
                         </Button>
                     </div>
                 )}
