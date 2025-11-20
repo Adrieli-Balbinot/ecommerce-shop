@@ -11,7 +11,7 @@ export function AccountLayout() {
     const user = JSON.parse(localStorage.getItem("user") || "{}");
     const userId = user?.id;
 
-    const customer = customers?.find((c) => c.userId === userId);
+    const customer = customers?.find((c) => c.id === userId);
 
     const [formData, setFormData] = useState({
         name: "",

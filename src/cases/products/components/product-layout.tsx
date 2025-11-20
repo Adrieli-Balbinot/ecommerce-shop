@@ -1,82 +1,94 @@
 import { useState, useEffect } from "react";
 import { useProducts } from "../hooks/use-product";
 import { ProductCard } from "./product-card";
-import type { CategoryDTO } from "@/cases/categories/dto/category.dto";
 import { useCategories } from "@/cases/categories/hooks/use-category";
+import type { CategoryDTO } from "@/cases/categories/dto/category.dto";
 
 export default function ProductLayout() {
-  const { data: products = [], isLoading } = useProducts();
-  const { data: categories = [] } = useCategories();
+    const { data: products = [], isLoading } = useProducts();
+    const { data: categories = [] } = useCategories();
 
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [filteredProducts, setFilteredProducts] = useState(products);
+    const [selectedCategory, setSelectedCategory] = useState("");
+    const [searchTerm, setSearchTerm] = useState(""); // <-- campo de busca
+    const [filteredProducts, setFilteredProducts] = useState(products);
 
-  useEffect(() => {
-    // sempre atualizar os produtos filtrados quando products mudar (evita bug)
-    setFilteredProducts(products);
-  }, [products]);
+    useEffect(() => {
+        setFilteredProducts(products);
+    }, [products]);
 
-  if (isLoading) return <p>Carregando...</p>;
+    if (isLoading) return <p>Carregando...</p>;
 
-  const handleFilter = () => {
-    if (!selectedCategory) {
-      setFilteredProducts(products);
-      return;
-    }
+    const handleFilter = () => {
+        let filtered = products;
 
-    const filtered = products.filter(
-      (p) => p.category?.id?.toString() === selectedCategory
-    );
+        if (selectedCategory) {
+            filtered = filtered.filter(
+                (p) => p.category?.id?.toString() === selectedCategory
+            );
+        }
 
-    setFilteredProducts(filtered);
-  };
+        if (searchTerm.trim() !== "") {
+            filtered = filtered.filter((p) =>
+                p.name.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+        }
 
-  return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold mb-6">
-        Catálogo de Produtos
-      </h1>
+        setFilteredProducts(filtered);
+    };
 
-      {/* Filtro */}
-      <div className="flex items-end gap-4 mb-8">
-        <div className="flex-1">
-          <label className="block text-sm font-medium mb-1">
-            Categoria
-          </label>
+    return (
+        <div className="p-8">
+            <h1 className="text-2xl font-bold mb-6">
+                Catálogo de Produtos
+            </h1>
+            <div className="flex items-end gap-4 mb-8">
+                <div className="flex-1">
+                    <label className="block text-sm font-medium mb-1">
+                        Buscar produto
+                    </label>
 
-          <select
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-            className="w-full border rounded-lg p-2"
-          >
-            <option value="">Todas</option>
+                    <input
+                        type="text"
+                        placeholder="Digite o nome..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="w-full border rounded-lg p-2"
+                    />
+                </div>
+                <div className="flex-1">
+                    <label className="block text-sm font-medium mb-1">
+                        Categoria
+                    </label>
 
-            {categories.map((categoria: CategoryDTO) => (
-              <option key={categoria.id} value={categoria.id}>
-                {categoria.name}
-              </option>
-            ))}
-          </select>
+                    <select
+                        value={selectedCategory}
+                        onChange={(e) => setSelectedCategory(e.target.value)}
+                        className="w-full border rounded-lg p-2"
+                    >
+                        <option value="">Todas</option>
+                        {categories.map((categoria: CategoryDTO) => (
+                            <option key={categoria.id} value={categoria.id}>
+                                {categoria.name}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+                <button
+                    onClick={handleFilter}
+                    className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition"
+                >
+                    Filtrar
+                </button>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredProducts.length > 0 ? (
+                    filteredProducts.map((product) => (
+                        <ProductCard key={product.id} product={product} />
+                    ))
+                ) : (
+                    <p>Nenhum registro encontrado.</p>
+                )}
+            </div>
         </div>
-
-        <button
-          onClick={handleFilter}
-          className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition"
-        >
-          Filtrar
-        </button>
-      </div>
-
-      {/* Lista */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredProducts.length > 0 ? (
-          filteredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))
-        ) : (
-          <p>Nenhum registro encontrado.</p>
-        )}
-      </div>
-    </div>
-  );
+    );
 }

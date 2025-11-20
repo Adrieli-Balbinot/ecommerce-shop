@@ -11,11 +11,12 @@ import { toast } from "react-toastify";
 export function CartSidebar() {
     const { cart, removeFromCart } = useCartContext();
     const createOrder = useCreateOrder();
+
     const userStorage = localStorage.getItem("user");
     const user = userStorage ? JSON.parse(userStorage) : null;
     const { data: customer } = useCustomerByAuthId(user?.id);
 
-    console.log("Customer in CartSidebar:", customer);
+    const cartFiltered = cart.filter(item => item.userId === user?.id);
 
     const handleCheckout = () => {
         if (!customer) {
@@ -25,10 +26,10 @@ export function CartSidebar() {
 
         const payload: Omit<OrderDTO, "id"> = {
             custommer: customer.id as string,
-            status: "NEW",
-            total: cart.reduce((sum, item) => sum + item.price * item.quantity, 0),
+            status: "INVOINCED",
+            total: cartFiltered.reduce((sum, item) => sum + item.price * item.quantity, 0),
             shipping: 10.0,
-            items: cart.map(item => ({
+            items: cartFiltered.map(item => ({
                 product: item.id as string,
                 quantity: item.quantity,
                 value: item.price,
@@ -48,9 +49,9 @@ export function CartSidebar() {
                         <ShoppingCart className="w-5 h-5" />
                     </div>
 
-                    {cart.length > 0 && (
+                    {cartFiltered.length > 0 && (
                         <span className=" absolute -top-2 -right-2 bg-red-600 text-white w-5 h-5 flex items-center justify-center  text-xs font-bold rounded-full">
-                            {cart.length}
+                            {cartFiltered.length}
                         </span>
                     )}
                 </div>
@@ -63,11 +64,11 @@ export function CartSidebar() {
                 <h2 className="text-xl font-semibold p-4 border-b">Meu Carrinho</h2>
 
                 <ScrollArea className="h-[80vh] p-4">
-                    {cart.length === 0 ? (
+                    {cartFiltered.length === 0 ? (
                         <p className="text-gray-500 text-center mt-10">Carrinho vazio</p>
                     ) : (
                         <div className="flex flex-col gap-4">
-                            {cart.map((item) => (
+                            {cartFiltered.map((item) => (
                                 <div
                                     key={item.id}
                                     className="flex justify-between items-center border rounded-lg p-3"
@@ -91,7 +92,7 @@ export function CartSidebar() {
                     )}
                 </ScrollArea>
 
-                {cart.length > 0 && (
+                {cartFiltered.length > 0 && (
                     <div className="p-4 border-t">
                         <Button
                             className="w-full bg-green-600 hover:bg-green-700 text-white"

@@ -18,6 +18,15 @@ export const OrderService = {
     async create(order: Omit<OrderDTO, 'id'>): Promise<OrderDTO> {
         const response = await api.post("/orders", order);
         return response.data as OrderDTO;
-    }
+    },
 
+    async listOrderCustommer(idUser: string): Promise<OrderDTO[]> {
+        const result = await api.get(`${_ENDPOINT}?customerId=${idUser}`);
+        return result.data;
+    },
+
+    async listOrdersEntregues(idUser: string): Promise<OrderDTO[]> {
+        const result = await api.get(`${_ENDPOINT}/entregues/${idUser}`);
+        return result.data;
+    }
 };
