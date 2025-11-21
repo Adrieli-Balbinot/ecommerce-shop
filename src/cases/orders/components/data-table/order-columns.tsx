@@ -11,40 +11,46 @@ const statusMap: Record<string, { label: string; color: string }> = {
     CANCELED: { label: "Cancelado", color: "text-red-500" },
 };
 
-export const orderColumns: ColumnDef<OrderDTO>[] = [
+export const orderColumns = (
+    openRatingSidebar: (order: OrderDTO) => void
+): ColumnDef<OrderDTO>[] => [
     {
         accessorKey: "id",
         header: "Id",
-        cell: ({ row }) => {
-            const order = row.original
-            return (
-                <p>{order.id}</p>
-            )
-        }
+        cell: ({ row }) => <p>{row.original.id}</p>,
     },
     {
         accessorKey: "status",
         header: "Status",
         cell: ({ row }) => {
             const order = row.original;
-            const statusInfo = statusMap[order.status] || { label: order.status, color: "text-gray-500" };
+            const statusInfo = statusMap[order.status] || {
+                label: order.status,
+                color: "text-gray-500",
+            };
 
-            return <p className={`font-medium ${statusInfo.color}`}>{statusInfo.label}</p>;
-        }
+            return (
+                <p className={`font-medium ${statusInfo.color}`}>
+                    {statusInfo.label}
+                </p>
+            );
+        },
     },
     {
         accessorKey: "total",
         header: "Total",
         cell: ({ row }) => {
-            const order = row.original
+            const order = row.original;
             return (
-                <p>
-                    <IntlProvider locale="pt-BR">
-                        <FormattedNumber value={order.total} style="currency" currency="BRL" />
-                    </IntlProvider>
-                </p>
-            )
-        }
+                <IntlProvider locale="pt-BR">
+                    <FormattedNumber
+                        value={order.total}
+                        style="currency"
+                        currency="BRL"
+                    />
+                </IntlProvider>
+            );
+        },
     },
     {
         accessorKey: "createdAt",
@@ -55,16 +61,16 @@ export const orderColumns: ColumnDef<OrderDTO>[] = [
 
             const formattedDate = createdAt
                 ? new Intl.DateTimeFormat("pt-BR", {
-                    day: "2-digit",
-                    month: "2-digit",
-                    year: "numeric",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                }).format(createdAt)
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                  }).format(createdAt)
                 : "—";
 
             return <p>{formattedDate}</p>;
-        }
+        },
     },
     {
         id: "actions",
@@ -74,12 +80,12 @@ export const orderColumns: ColumnDef<OrderDTO>[] = [
 
             return (
                 <button
-                    onClick={() => console.log("Ver itens do pedido", order.id)}
+                    onClick={() => openRatingSidebar(order)}
                     className="px-3 py-1 rounded-lg bg-primary text-white hover:bg-primary/80"
                 >
                     Ver itens
                 </button>
             );
-        }
-    }
+        },
+    },
 ];

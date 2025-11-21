@@ -2,6 +2,7 @@ import { orderColumns } from "./order-columns";
 import { useCustomerByAuthId } from "@/cases/customers/hooks/use-customer";
 import { DataTable } from "@/components/ui/data-table";
 import { useOrdersCustommer } from "../../hooks/use-orders";
+import type { OrderDTO } from "../../dto/order.dto";
 
 export function OrderDataTable() {
     const userStorage = localStorage.getItem("user");
@@ -11,14 +12,21 @@ export function OrderDataTable() {
 
     const isLoading = loadingCustomer || loadingOrders;
 
+    const openRatingSidebar = (order: OrderDTO) => {
+        console.log("Abrir sidebar para avaliar:", order);
+        // aqui você abre o drawer, sidebar etc.
+    };
+
     return (
         <div>
             {isLoading ? (
                 <p>Carregando...</p>
             ) : (
-                <DataTable columns={orderColumns} data={orders ?? []} />
+                <DataTable 
+                    columns={orderColumns(openRatingSidebar)} 
+                    data={orders ?? []}
+                />
             )}
         </div>
     );
 }
-

@@ -16,7 +16,7 @@ export function useProduct(id: string) {
         queryFn: () => ProductService.getById(id),
         enabled: !!id
     });
-}    
+}
 
 export function useCreateProduct() {
     const queryClient = useQueryClient();
@@ -36,8 +36,8 @@ export function useCreateProduct() {
 export function useUpdateProduct() {
     const queryClient = useQueryClient();
 
-    return useMutation<ProductDTO, Error, {id: string, product: ProductDTO}>({
-        mutationFn: ({id, product}) => ProductService.update(id, product),
+    return useMutation<ProductDTO, Error, { id: string, product: ProductDTO }>({
+        mutationFn: ({ id, product }) => ProductService.update(id, product),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['products'] });
             toast.success('Registro alterado com sucesso!');
@@ -61,4 +61,11 @@ export function useDeleteProduct() {
             toast.error(`Erro ao excluir: ${error.message}`);
         }
     })
+}
+
+export function useRateProduct() {
+    return useMutation({
+        mutationFn: ({ productId, rating }: { productId: string; rating: number }) =>
+            ProductService.rate(productId, rating),
+    });
 }
