@@ -3,6 +3,7 @@ import { useProducts } from "../hooks/use-product";
 import { ProductCard } from "./product-card";
 import { useCategories } from "@/cases/categories/hooks/use-category";
 import type { CategoryDTO } from "@/cases/categories/dto/category.dto";
+import { ClipboardList } from "lucide-react";
 
 export default function ProductLayout() {
     const { data: products = [], isLoading } = useProducts();
@@ -38,13 +39,14 @@ export default function ProductLayout() {
 
     return (
         <div className="p-8">
-            <h1 className="text-2xl font-bold mb-6">
+            <h1 className="text-2xl font-bold mb-6 flex items-center gap-2">
+                <ClipboardList className="w-6 h-6 text-primary" />
                 Catálogo de Produtos
             </h1>
             <div className="flex items-end gap-4 mb-8">
                 <div className="flex-1">
                     <label className="block text-sm font-medium mb-1">
-                        Buscar produto
+                        Buscar produto:
                     </label>
 
                     <input
@@ -57,7 +59,7 @@ export default function ProductLayout() {
                 </div>
                 <div className="flex-1">
                     <label className="block text-sm font-medium mb-1">
-                        Categoria
+                        Categoria:
                     </label>
 
                     <select

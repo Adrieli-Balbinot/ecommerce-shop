@@ -11,6 +11,7 @@ interface ProductCardProps {
 export function ProductCard({ product }: ProductCardProps) {
     const { addToCart } = useCartContext();
     const { toggleFavorite, isFavorite } = useFavorites();
+
     const user = JSON.parse(localStorage.getItem("user") || "{}");
     const userId = user?.id;
 
@@ -25,15 +26,28 @@ export function ProductCard({ product }: ProductCardProps) {
         });
     }
 
+    function handleToggleFavorite() {
+        toggleFavorite({
+            id: product.id!,
+            idUser: userId,
+            product: {
+                id: product.id!,
+                name: product.name,
+                price: product.price,
+                rating: product.rating,
+                category: product.category?.name,
+                description: product.description,
+            }
+        });
+    }
+
     return (
         <Card className="relative rounded-2xl shadow-md hover:shadow-lg transition-all">
             <CardContent className="p-4 flex flex-col gap-4">
+
+                {/* FAVORITO */}
                 <button
-                    onClick={() => toggleFavorite({
-                        id: product.id!,
-                        name: product.name,
-                        idUser: userId,
-                    })}
+                    onClick={handleToggleFavorite}
                     className="absolute top-3 right-3"
                 >
                     <Heart
@@ -41,25 +55,31 @@ export function ProductCard({ product }: ProductCardProps) {
                             }`}
                     />
                 </button>
+
+                {/* INFO DO PRODUTO */}
                 <div className="flex flex-col gap-1">
                     <h2 className="font-semibold text-lg line-clamp-1">
                         {product.name}
                     </h2>
+
                     {product.category && (
                         <div className="flex items-center text-sm text-gray-500 gap-1">
                             <Tag className="w-4 h-4" />
                             {product.category.name}
                         </div>
                     )}
+
                     {product.price !== undefined && (
                         <p className="text-xl font-bold text-primary">
                             R$ {product.price}
                         </p>
                     )}
                 </div>
+
+                {/* BOTÃO CARRINHO */}
                 <button
                     onClick={handleAddToCart}
-                    className=" mt-2 w-full flex items-center justify-center gap-2 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition"
+                    className="mt-2 w-full flex items-center justify-center gap-2 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition"
                 >
                     <ShoppingCart className="w-4 h-4" />
                     Adicionar ao carrinho

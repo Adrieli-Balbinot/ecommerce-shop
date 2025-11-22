@@ -1,7 +1,7 @@
 import { CardTitle } from "@/components/ui/card"
 import { OrderDataTable } from "./data-table/order-data-table"
 import { Outlet, useNavigate } from "react-router-dom"
-import { Package } from "lucide-react"
+import { Package, PackageSearch } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export function OrderLayout() {
@@ -9,7 +9,7 @@ export function OrderLayout() {
     const navigate = useNavigate()
 
     function handleGoToHistory() {
-        navigate("/history") 
+        navigate("/history")
     }
 
     return (
@@ -21,14 +21,18 @@ export function OrderLayout() {
                         Meus Pedidos
                     </CardTitle>
                 </div>
-                <Button variant="outline" onClick={handleGoToHistory}>
+
+                <Button variant="outline" onClick={handleGoToHistory} className="flex items-center gap-2">
+                    <PackageSearch className="w-5 h-5" />
                     Histórico de pedidos
                 </Button>
             </div>
+
             <div className="flex flex-col gap-4">
                 <OrderDataTable />
                 <Outlet />
             </div>
         </div>
-    )
+    );
+
 }

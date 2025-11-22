@@ -1,5 +1,12 @@
 export interface FavoriteDTO {
-  id: string;
-  name: string;
-  idUser: string;
+    id: string;
+    idUser: string;
+    product: {
+        id: string;
+        name: string;
+        price: number;
+        rating?: number;
+        category?: string;
+        description?: string;
+    };
 }

@@ -7,6 +7,7 @@ import { useCreateOrder } from "@/cases/orders/hooks/use-orders";
 import type { OrderDTO } from "@/cases/orders/dto/order.dto";
 import { useCustomerByAuthId } from "@/cases/customers/hooks/use-customer";
 import { toast } from "react-toastify";
+import type { ProductDTO } from "@/cases/products/dto/product.dto";
 
 export function CartSidebar() {
     const { cart, removeFromCart } = useCartContext();
@@ -30,7 +31,7 @@ export function CartSidebar() {
             total: cartFiltered.reduce((sum, item) => sum + item.price * item.quantity, 0),
             shipping: 10.0,
             items: cartFiltered.map(item => ({
-                product: item.id as string,
+                product: { id: item.id } as ProductDTO,
                 quantity: item.quantity,
                 value: item.price,
             }))

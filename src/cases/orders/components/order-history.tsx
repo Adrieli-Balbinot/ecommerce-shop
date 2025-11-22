@@ -1,4 +1,4 @@
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
+import { CardTitle, CardContent } from "@/components/ui/card"
 import { useOrdersEntregues } from "@/cases/orders/hooks/use-orders"
 import { PackageSearch } from "lucide-react"
 import { DataTable } from "@/components/ui/data-table"
@@ -6,10 +6,10 @@ import { orderColumns } from "./data-table/order-columns"
 import { useCustomerByAuthId } from "@/cases/customers/hooks/use-customer"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { useState } from "react"
-import type { OrderItemDTO } from "../dto/order-item"
 import type { OrderDTO } from "../dto/order.dto"
 import { StarRating } from "@/components/layout/star-rating"
 import { useRateProduct } from "@/cases/products/hooks/use-product"
+import type { OrderItemDTO } from "../dto/order-item"
 
 export function OrderHistoryLayout() {
 
@@ -50,35 +50,32 @@ export function OrderHistoryLayout() {
         );
     };
 
-
     return (
         <>
-            <div className="p-4 w-full flex justify-center">
-                <Card className="w-full max-w-5xl shadow-md rounded-2xl">
-
-                    <CardHeader className="flex flex-row items-center gap-2 pb-2">
-                        <PackageSearch className="w-6 h-6 text-primary" />
-                        <CardTitle className="text-2xl font-bold text-primary">
-                            Histórico de Pedidos
-                        </CardTitle>
-                    </CardHeader>
-
-                    <CardContent>
-                        {isLoading ? (
-                            <p>Carregando...</p>
-                        ) : (
-                            <DataTable
-                                columns={enrichedColumns}
-                                data={orders ?? []}
-                            />
-                        )}
-                    </CardContent>
-
-                </Card>
+            <div className="p-6 w-full flex flex-col gap-4">
+                <div className="flex items-center gap-2">
+                    <PackageSearch className="w-6 h-6 text-primary" />
+                    <CardTitle className="text-2xl font-bold text-primary">
+                        Histórico de Pedidos
+                    </CardTitle>
+                </div>
+                <CardContent className="w-full p-0">
+                    {isLoading ? (
+                        <p>Carregando...</p>
+                    ) : (
+                        <DataTable
+                            columns={enrichedColumns}
+                            data={orders ?? []}
+                        />
+                    )}
+                </CardContent>
             </div>
 
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
-                <SheetContent side="right" className="w-[400px] sm:w-[500px]">
+                <SheetContent
+                    side="right"
+                    className="w-[400px] sm:w-[500px] p-4"
+                >
                     <SheetHeader>
                         <SheetTitle className="text-xl font-bold">
                             Avaliar Produtos
@@ -86,23 +83,23 @@ export function OrderHistoryLayout() {
                     </SheetHeader>
 
                     {selectedOrder ? (
-                        <div className="mt-6 space-y-4">
+                        <div className="mt-6 space-y-5">
                             {selectedOrder.items?.map((item: OrderItemDTO) => (
                                 <div
                                     key={item.id}
-                                    className="border p-4 rounded-xl shadow-sm"
+                                    className="border p-5 rounded-xl shadow-sm bg-white"
                                 >
                                     <p className="font-semibold">{item.product.name}</p>
                                     <p className="text-sm text-muted-foreground">
                                         Quantidade: {item.quantity}
                                     </p>
-                                    <div className="mt-3">
+
+                                    <div className="mt-4 flex justify-center">
                                         <StarRating
                                             value={localRatings[item.product.id!] ?? item.product.rating ?? 0}
                                             onChange={(rating) => handleRating(item.product.id!, rating)}
                                         />
                                     </div>
-
                                 </div>
                             ))}
                         </div>
@@ -111,6 +108,8 @@ export function OrderHistoryLayout() {
                     )}
                 </SheetContent>
             </Sheet>
+
         </>
     );
+
 }
