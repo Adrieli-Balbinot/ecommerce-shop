@@ -37,7 +37,7 @@
 //                 toast.error('Credenciais inválidas. Verifique seu e-mail e senha.');
 //                 return;
 //             }
-            
+
 //             console.log('Login successful:', data.user);
 
 //             localStorage.setItem('user', JSON.stringify({id: data.user?.id, token: data.session?.access_token}) || '');
@@ -111,17 +111,19 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'react-toastify';
 import { supabase } from '@/lib/supabase-client';
+import bgImage from "@/assets/imagem.png"; 
+
 
 export function Login() {
     const [email, setEmail] = useState('');
@@ -142,8 +144,8 @@ export function Login() {
             }
 
             localStorage.setItem(
-              'user',
-              JSON.stringify({ id: data.user?.id, token: data.session?.access_token }) || ''
+                'user',
+                JSON.stringify({ id: data.user?.id, token: data.session?.access_token }) || ''
             );
             toast.success('Login realizado com sucesso!');
             navigate('/products');
@@ -156,11 +158,10 @@ export function Login() {
 
     return (
         <div className="flex min-h-screen">
-            {/* Imagem de fundo */}
             <div
                 className="hidden md:flex flex-1 bg-cover bg-center"
                 style={{
-                    backgroundImage: "url('https://images.unsplash.com/photo-1606813908314-60c60f2e8024?auto=format&fit=crop&w=1350&q=80')"
+                    backgroundImage: `url(${bgImage})`,
                 }}
             ></div>
 
